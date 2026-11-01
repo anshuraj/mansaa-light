@@ -2,1001 +2,221 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mansaa Smart Shine Controller</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0c0f17;
-      --card-bg: rgba(22, 27, 39, 0.75);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --success: #10b981;
-      --danger: #ef4444;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 24px 16px;
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.12) 0px, transparent 50%);
-    }
-
-    .container {
-      width: 100%;
-      max-width: 640px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 8px;
-    }
-
-    h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #60a5fa, #c084fc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
-    }
-
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    .connection-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      padding: 6px 14px;
-      border-radius: 20px;
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
-    }
-
-    .status-badge.connected {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: currentColor;
-    }
-
-    button.btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      padding: 10px 20px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    button.btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    button.btn-primary:hover:not(:disabled) {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
-    }
-
-    button.btn-danger {
-      background: var(--danger);
-      color: white;
-    }
-
-    button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .power-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--card-border);
-      margin-bottom: 16px;
-    }
-
-    .power-label {
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-
-    .power-btn {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #1f2937;
-      color: var(--text-muted);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
-    }
-
-    .power-btn.on {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-      transform: scale(1.05);
-    }
-
-    .power-btn svg {
-      width: 28px;
-      height: 28px;
-      stroke-width: 2.5;
-    }
-
-    .control-group {
-      margin-top: 18px;
-    }
-
-    .control-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .slider {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 8px;
-      border-radius: 4px;
-      background: #374151;
-      outline: none;
-      transition: opacity 0.2s;
-    }
-
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      border: 2px solid var(--primary);
-      transition: transform 0.1s;
-    }
-
-    .slider::-webkit-slider-thumb:hover {
-      transform: scale(1.15);
-    }
-
-    .temp-slider {
-      background: linear-gradient(to right, #ff9e3b, #fff7ed, #bae6fd);
-    }
-
-    .color-picker-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-top: 12px;
-    }
-
-    .color-picker-input {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      width: 58px;
-      height: 58px;
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      border-radius: 50%;
-      overflow: hidden;
-    }
-
-    .color-picker-input::-webkit-color-swatch-wrapper {
-      padding: 0;
-    }
-
-    .color-picker-input::-webkit-color-swatch {
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-    }
-
-    .color-preview-box {
-      flex: 1;
-      height: 48px;
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-    }
-
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 12px;
-      color: #e5e7eb;
-    }
-
-    .scenes-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
-      gap: 10px;
-    }
-
-    .scene-pill {
-      background: rgba(31, 41, 55, 0.6);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 10px 6px;
-      text-align: center;
-      font-size: 0.8rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      color: var(--text);
-    }
-
-    .scene-pill:hover:not(:disabled) {
-      background: rgba(55, 65, 81, 0.8);
-      transform: translateY(-2px);
-    }
-
-    .scene-color-dot {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
-    }
-
-    .effects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 10px;
-    }
-
-    .effect-btn {
-      background: rgba(31, 41, 55, 0.6);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 12px 10px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      color: var(--text);
-      transition: all 0.2s;
-      text-align: center;
-    }
-
-    .effect-btn:hover:not(:disabled) {
-      background: rgba(59, 130, 246, 0.2);
-      border-color: rgba(59, 130, 246, 0.4);
-      transform: translateY(-2px);
-    }
-
-    .effect-btn.active {
-      background: rgba(59, 130, 246, 0.3);
-      border-color: var(--primary);
-      color: #93c5fd;
-    }
-
-    .console-box {
-      font-family: 'SF Mono', Consolas, Monaco, monospace;
-      font-size: 0.75rem;
-      background: #080a0f;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      padding: 12px;
-      height: 140px;
-      overflow-y: auto;
-      color: #9ca3af;
-      line-height: 1.4;
-    }
-
-    .log-line {
-      margin-bottom: 4px;
-    }
-
-    .log-info { color: #60a5fa; }
-    .log-success { color: #34d399; }
-    .log-warn { color: #fbbf24; }
-    .log-error { color: #f87171; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none';">
+  <title>Mansaa Smart Shine — Serverless BLE Controller</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="apple-touch-icon" href="./icon.svg">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Mansaa Smart Shine</h1>
-      <p class="subtitle">Direct Web Bluetooth Controller for Mac & Chrome</p>
+      <div class="brand">
+        <img src="./icon.svg" alt="Smart Shine Icon" class="brand-icon">
+        <div>
+          <h1>Mansaa Smart Shine</h1>
+          <p class="subtitle">Serverless Direct Web Bluetooth PWA</p>
+        </div>
+      </div>
+      <button id="installAppBtn" class="btn btn-accent btn-sm hidden" type="button">📲 Install App</button>
     </header>
 
-    <!-- Connection Card -->
-    <div class="card">
-      <div class="connection-bar">
+    <div id="envBanner" class="banner hidden" role="status"></div>
+
+    <!-- Connection & Hardware Signature Card -->
+    <section class="card">
+      <div class="connection-top">
         <div>
           <div class="status-badge" id="statusBadge">
             <span class="status-dot"></span>
             <span id="statusText">Disconnected</span>
           </div>
-          <div id="deviceName" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">No device connected</div>
+          <div id="deviceName" class="device-meta">No bulb connected</div>
         </div>
-        <div>
-          <button id="connectBtn" class="btn btn-primary">Connect Bulb</button>
-          <button id="disconnectBtn" class="btn btn-danger" style="display: none;">Disconnect</button>
-        </div>
+        <button id="disconnectBtn" class="btn btn-danger btn-sm hidden" type="button">Disconnect</button>
       </div>
-      <div style="margin-top: 14px; padding: 10px 14px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 10px; font-size: 0.8rem; color: #93c5fd; line-height: 1.4;">
-        📱 <strong>Phone Connection Tip:</strong> In the Bluetooth list, look for <strong>MAN_V11400009</strong> (Android deliberately hides MAC addresses for privacy). Ensure your phone's <strong>Location &amp; Bluetooth</strong> toggles are ON.
-      </div>
-    </div>
 
-    <!-- Controls Card -->
-    <div class="card" id="controlsCard">
-      <!-- Power Switch -->
+      <div class="btn-row">
+        <button id="reconnectBtn" class="btn btn-success hidden" type="button">⚡ Instant Reconnect Saved Bulb</button>
+        <button id="connectBtn" class="btn btn-primary" type="button">🎯 Connect Mansaa Bulb</button>
+        <button id="connectAllBtn" class="btn btn-secondary" type="button">📋 Show All BLE</button>
+      </div>
+
+      <div class="hint-box">
+        <strong>Why it now shows up on Android &amp; Mac:</strong>
+        <strong>Connect Mansaa Bulb</strong> matches the bulb's raw <code>0xDE19</code> manufacturer advertisement packet even when unnamed. If Chrome shows <em>"Unknown or Unsupported Device"</em> in that filtered popup, tap it and click <strong>Pair</strong> — that entry is your bulb!
+      </div>
+
+      <!-- Known MAC / Custom Signature Encoder -->
+      <details class="subpanel">
+        <summary>🔧 Have Your Bulb's MAC Address or Custom ID? (Pinpoint Filter)</summary>
+        <div class="subpanel-body">
+          <p>
+            Enter your bulb's 6-byte Bluetooth MAC address (visible in Android <em>nRF Connect</em>) to compute its exact Mansaa <code>CheckAes</code> advertisement bytes so Chrome filters exclusively for your physical bulb:
+          </p>
+          <div class="input-row">
+            <input id="macInput" class="text-input" type="text" placeholder="MAC e.g. C7:12:34:56:78:9A" maxlength="17" autocomplete="off" spellcheck="false">
+            <input id="companyIdInput" class="text-input" type="text" placeholder="Company ID (default 0xDE19)" maxlength="6" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="input-row">
+            <button id="applyMacBtn" class="btn btn-accent btn-sm" type="button">Apply Hardware Filter</button>
+            <button id="clearMacBtn" class="btn btn-secondary btn-sm" type="button">Reset Default (0xDE19)</button>
+          </div>
+          <div id="macFilterStatus" class="mono-pill hidden"></div>
+        </div>
+      </details>
+
+      <!-- Android & Mac Checklist -->
+      <details class="subpanel">
+        <summary>📱 Android &amp; Mac Connection Checklist + Zero-Picker Setup</summary>
+        <div class="subpanel-body">
+          <ul class="checklist">
+            <li><strong>Disconnect other devices first:</strong> Stop <code>controller.py</code> on your Mac and unpair the bulb from Android/macOS System Bluetooth Settings (BLE bulbs stop advertising while connected anywhere else).</li>
+            <li><strong>Android Location Toggle ON:</strong> On Android Chrome, grant <em>Nearby Devices + Location</em> permissions and ensure the phone's system <strong>Location (GPS)</strong> switch is turned ON while scanning.</li>
+            <li><strong>Skip the picker forever:</strong> Enable <code>chrome://flags/#enable-web-bluetooth-new-permissions-backend</code> in Chrome. After pairing once, <strong>⚡ Instant Reconnect</strong> connects directly without opening the device selector!</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- Primary Light Controls -->
+    <section class="card" id="controlsCard">
       <div class="power-section">
         <div>
           <div class="power-label">Light Power</div>
-          <div style="font-size: 0.85rem; color: var(--text-muted);">Toggle bulb illumination state</div>
+          <div class="power-sub">Toggle illumination or save power-on default</div>
         </div>
-        <button id="powerBtn" class="power-btn" disabled title="Toggle Power">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button id="powerBtn" class="power-btn" type="button" disabled title="Toggle Power" aria-label="Toggle Power">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         </button>
       </div>
 
-      <!-- Brightness -->
       <div class="control-group">
         <div class="control-header">
-          <span>Brightness</span>
+          <label for="brightnessSlider">Brightness</label>
           <span id="brightnessVal">100%</span>
         </div>
         <input type="range" id="brightnessSlider" class="slider" min="1" max="100" value="100" disabled>
       </div>
 
-      <!-- Warm / Cool White Temperature -->
       <div class="control-group">
         <div class="control-header">
-          <span>White Temperature</span>
+          <label for="tempSlider">White Temperature</label>
           <span id="tempVal">4000K</span>
         </div>
         <input type="range" id="tempSlider" class="slider temp-slider" min="2200" max="6500" value="4000" step="50" disabled>
       </div>
 
-      <!-- Color Picker -->
       <div class="control-group">
         <div class="control-header">
-          <span>Color Palette</span>
+          <label for="colorPicker">RGB Color Palette</label>
           <span id="hexVal">#FFFFFF</span>
         </div>
         <div class="color-picker-wrapper">
           <input type="color" id="colorPicker" class="color-picker-input" value="#ffffff" disabled>
-          <div id="colorPreview" class="color-preview-box" style="background-color: #ffffff; color: #000000;">
-            #FFFFFF
-          </div>
+          <div id="colorPreview" class="color-preview-box">#FFFFFF</div>
         </div>
       </div>
-    </div>
 
-    <!-- Preset Scenes Card -->
-    <div class="card">
+      <div class="btn-row">
+        <button id="saveDefaultBtn" class="btn btn-secondary btn-sm" type="button" disabled>💾 Save Current Color as Wall-Switch Default</button>
+      </div>
+    </section>
+
+    <!-- Preset Scenes -->
+    <section class="card">
       <div class="section-title">Preset Lighting Scenes</div>
       <div class="scenes-grid">
-        <button class="scene-pill" data-rgb="255,255,255" disabled>
-          <span class="scene-color-dot" style="background: #ffffff;"></span>
+        <button class="scene-pill" type="button" data-rgb="255,255,255" disabled>
+          <span class="scene-color-dot dot-bright"></span>
           Bright White
         </button>
-        <button class="scene-pill" data-rgb="255,191,0" disabled>
-          <span class="scene-color-dot" style="background: #ffbf00;"></span>
+        <button class="scene-pill" type="button" data-rgb="255,191,0" disabled>
+          <span class="scene-color-dot dot-relax"></span>
           Warm Relax
         </button>
-        <button class="scene-pill" data-rgb="253,94,83" disabled>
-          <span class="scene-color-dot" style="background: #fd5e53;"></span>
+        <button class="scene-pill" type="button" data-rgb="253,94,83" disabled>
+          <span class="scene-color-dot dot-sunset"></span>
           Sunset Orange
         </button>
-        <button class="scene-pill" data-rgb="255,0,0" disabled>
-          <span class="scene-color-dot" style="background: #ff0000;"></span>
+        <button class="scene-pill" type="button" data-rgb="255,0,0" disabled>
+          <span class="scene-color-dot dot-romantic"></span>
           Romantic Red
         </button>
-        <button class="scene-pill" data-rgb="249,105,105" disabled>
-          <span class="scene-color-dot" style="background: #f96969;"></span>
+        <button class="scene-pill" type="button" data-rgb="249,105,105" disabled>
+          <span class="scene-color-dot dot-pink"></span>
           Baby Pink
         </button>
-        <button class="scene-pill" data-rgb="34,139,34" disabled>
-          <span class="scene-color-dot" style="background: #228b22;"></span>
+        <button class="scene-pill" type="button" data-rgb="34,139,34" disabled>
+          <span class="scene-color-dot dot-forest"></span>
           Forest Green
         </button>
-        <button class="scene-pill" data-rgb="0,255,0" disabled>
-          <span class="scene-color-dot" style="background: #00ff00;"></span>
+        <button class="scene-pill" type="button" data-rgb="0,255,0" disabled>
+          <span class="scene-color-dot dot-emerald"></span>
           Emerald Green
         </button>
-        <button class="scene-pill" data-rgb="86,178,224" disabled>
-          <span class="scene-color-dot" style="background: #56b2e0;"></span>
+        <button class="scene-pill" type="button" data-rgb="86,178,224" disabled>
+          <span class="scene-color-dot dot-beach"></span>
           Beach Blue
         </button>
-        <button class="scene-pill" data-rgb="0,0,255" disabled>
-          <span class="scene-color-dot" style="background: #0000ff;"></span>
+        <button class="scene-pill" type="button" data-rgb="0,0,255" disabled>
+          <span class="scene-color-dot dot-blue"></span>
           Deep Blue
         </button>
       </div>
-    </div>
+    </section>
 
-    <!-- Dynamic Effects Card -->
-    <div class="card">
+    <!-- Built-In Dynamic Effects (All 12 from Official APK) -->
+    <section class="card">
       <div class="section-title">Built-In Dynamic Effects</div>
       <div class="effects-grid">
-        <button class="effect-btn" data-effect="stop" disabled>Stop Effect</button>
-        <button class="effect-btn" data-effect="police" disabled>Police Strobe</button>
-        <button class="effect-btn" data-effect="slow_music" disabled>Slow Music</button>
-        <button class="effect-btn" data-effect="aliens" disabled>Aliens Pulse</button>
-        <button class="effect-btn" data-effect="fantasy" disabled>Fantasy Blue</button>
-        <button class="effect-btn" data-effect="magic" disabled>Magic Ambient</button>
-        <button class="effect-btn" data-effect="fire_cracker" disabled>Fire Cracker</button>
-        <button class="effect-btn" data-effect="romance" disabled>Romance Glow</button>
-        <button class="effect-btn" data-effect="dance" disabled>Let's Dance</button>
+        <button class="effect-btn" type="button" data-effect="stop" disabled>⏹ Stop Effect</button>
+        <button class="effect-btn" type="button" data-effect="police" disabled>🚨 Police Strobe</button>
+        <button class="effect-btn" type="button" data-effect="slow_music" disabled>🎵 Slow Music</button>
+        <button class="effect-btn" type="button" data-effect="aliens" disabled>👽 Aliens Pulse</button>
+        <button class="effect-btn" type="button" data-effect="fantasy" disabled>🌌 Fantasy Blue</button>
+        <button class="effect-btn" type="button" data-effect="magic" disabled>✨ Magic Ambient</button>
+        <button class="effect-btn" type="button" data-effect="fire_cracker" disabled>🧨 Fire Cracker</button>
+        <button class="effect-btn" type="button" data-effect="romance" disabled>💖 Romance Glow</button>
+        <button class="effect-btn" type="button" data-effect="kite_festival" disabled>🪁 Kite Festival</button>
+        <button class="effect-btn" type="button" data-effect="dance" disabled>💃 Let's Dance</button>
+        <button class="effect-btn" type="button" data-effect="dim_slow_music" disabled>🌙 Dim Music</button>
+        <button class="effect-btn" type="button" data-effect="dim_fantasy" disabled>🌊 Dim Fantasy</button>
+        <button class="effect-btn" type="button" data-effect="dim_romance" disabled>🕯️ Dim Romance</button>
       </div>
-    </div>
+    </section>
 
-    <!-- Event & Protocol Console -->
-    <div class="card">
+    <!-- Bulb Hardware Name Settings -->
+    <section class="card">
+      <details class="subpanel">
+        <summary>⚙️ Bulb Hardware Settings (Rename Advertising Name)</summary>
+        <div class="subpanel-body">
+          <p>Read or write the UTF-8 lamp name stored inside GATT characteristic <code>0xFFB7</code> (1–16 ASCII characters):</p>
+          <div class="input-row">
+            <input id="lampNameInput" class="text-input" type="text" placeholder="e.g. MAN_V11400009" maxlength="16" disabled>
+            <button id="saveNameBtn" class="btn btn-primary btn-sm" type="button" disabled>Save Name</button>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- Protocol & Activity Console -->
+    <section class="card">
       <div class="control-header">
-        <span>Activity Log</span>
-        <a href="#" id="clearLogBtn" style="color: var(--primary); text-decoration: none; font-size: 0.8rem;">Clear</a>
+        <span>BLE Protocol Log</span>
+        <button id="clearLogBtn" class="link-btn" type="button">Clear</button>
       </div>
-      <div id="consoleLog" class="console-box"></div>
-    </div>
+      <div id="consoleLog" class="console-box" aria-live="polite"></div>
+    </section>
   </div>
 
-  <script>
-    // Protocol UUIDs
-    const SERVICE_LED_UUID = '0000ffb0-0000-1000-8000-00805f9b34fb';
-    const CHAR_DATA_UUID = '0000ffb2-0000-1000-8000-00805f9b34fb';       // Color / Power
-    const CHAR_MODE_UUID = '0000ffb1-0000-1000-8000-00805f9b34fb';       // Effects mode
-    const CHAR_TIME_UUID = '0000ffb3-0000-1000-8000-00805f9b34fb';       // System clock
-    const CHAR_R_ARRAY_UUID = '0000ffb9-0000-1000-8000-00805f9b34fb';    // Effect Red table
-    const CHAR_G_ARRAY_UUID = '0000ffba-0000-1000-8000-00805f9b34fb';    // Effect Green table
-    const CHAR_B_ARRAY_UUID = '0000ffbb-0000-1000-8000-00805f9b34fb';    // Effect Blue table
-    const CHAR_NAME_UUID = '0000ffb7-0000-1000-8000-00805f9b34fb';       // Lamp Name
-    const SERVICE_AES_UUID = '0000fc60-0000-1000-8000-00805f9b34fb';
-    const CHAR_AES_CHECK_UUID = '0000fc64-0000-1000-8000-00805f9b34fb';
-
-    // State Variables
-    let bluetoothDevice = null;
-    let gattServer = null;
-    let charData = null;
-    let charMode = null;
-    let charTime = null;
-    let charR = null;
-    let charG = null;
-    let charB = null;
-    let charName = null;
-
-    let isPoweredOn = false;
-    let currentR = 255, currentG = 255, currentB = 255;
-    let currentBrightness = 100;
-    let writeQueue = Promise.resolve();
-
-    // DOM Elements
-    const connectBtn = document.getElementById('connectBtn');
-    const disconnectBtn = document.getElementById('disconnectBtn');
-    const statusBadge = document.getElementById('statusBadge');
-    const statusText = document.getElementById('statusText');
-    const deviceNameEl = document.getElementById('deviceName');
-    const powerBtn = document.getElementById('powerBtn');
-    const brightnessSlider = document.getElementById('brightnessSlider');
-    const brightnessVal = document.getElementById('brightnessVal');
-    const tempSlider = document.getElementById('tempSlider');
-    const tempVal = document.getElementById('tempVal');
-    const colorPicker = document.getElementById('colorPicker');
-    const colorPreview = document.getElementById('colorPreview');
-    const hexVal = document.getElementById('hexVal');
-    const consoleLog = document.getElementById('consoleLog');
-    const clearLogBtn = document.getElementById('clearLogBtn');
-
-    function log(msg, type = 'info') {
-      const line = document.createElement('div');
-      line.className = `log-line log-${type}`;
-      const time = new Date().toLocaleTimeString();
-      line.textContent = `[${time}] ${msg}`;
-      consoleLog.appendChild(line);
-      consoleLog.scrollTop = consoleLog.scrollHeight;
-    }
-
-    clearLogBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      consoleLog.innerHTML = '';
-    });
-
-    function setControlsEnabled(enabled) {
-      powerBtn.disabled = !enabled;
-      brightnessSlider.disabled = !enabled;
-      tempSlider.disabled = !enabled;
-      colorPicker.disabled = !enabled;
-      document.querySelectorAll('.scene-pill').forEach(btn => btn.disabled = !enabled);
-      document.querySelectorAll('.effect-btn').forEach(btn => btn.disabled = !enabled);
-    }
-
-    function queueWrite(fn) {
-      writeQueue = writeQueue.then(fn).catch(err => {
-        log(`Write error: ${err.message}`, 'error');
-      });
-      return writeQueue;
-    }
-
-    async function sendGattWrite(characteristic, byteArray) {
-      if (!characteristic) return;
-      const data = new Uint8Array(byteArray);
-      const hex = Array.from(data).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
-      log(`GATT TX (${characteristic.uuid.substring(4, 8)}): ${hex}`);
-      await characteristic.writeValueWithResponse(data.buffer);
-    }
-
-    // Connect flow
-    connectBtn.addEventListener('click', async () => {
-      try {
-        log('Scanning for Mansaa bulb (Look for "MAN_V11400009")...');
-        // Primary targeted scan: filters directly for Service 0xFFB0 or prefix MAN
-        try {
-          bluetoothDevice = await navigator.bluetooth.requestDevice({
-            filters: [
-              { services: [SERVICE_LED_UUID] },
-              { namePrefix: 'MAN' },
-              { namePrefix: 'Lamp' }
-            ],
-            optionalServices: [
-              SERVICE_LED_UUID,
-              SERVICE_AES_UUID,
-              '0000180a-0000-1000-8000-00805f9b34fb'
-            ]
-          });
-        } catch (filterErr) {
-          if (filterErr.name === 'NotFoundError') {
-            throw filterErr;
-          }
-          log('Targeted filter fallback to show all devices...', 'warn');
-          bluetoothDevice = await navigator.bluetooth.requestDevice({
-            acceptAllDevices: true,
-            optionalServices: [
-              SERVICE_LED_UUID,
-              SERVICE_AES_UUID,
-              '0000180a-0000-1000-8000-00805f9b34fb'
-            ]
-          });
-        }
-
-        bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnected);
-        log(`Selected device: ${bluetoothDevice.name || 'Unnamed'} (${bluetoothDevice.id})`, 'success');
-
-        statusText.textContent = 'Connecting...';
-        gattServer = await bluetoothDevice.gatt.connect();
-        log('Connected to GATT Server', 'success');
-
-        // Discover Services
-        log('Discovering Primary LED Service (0xFFB0)...');
-        const ledService = await gattServer.getPrimaryService(SERVICE_LED_UUID);
-        
-        charData = await ledService.getCharacteristic(CHAR_DATA_UUID);
-        log('Found Data Characteristic (0xFFB2)', 'success');
-
-        try { charMode = await ledService.getCharacteristic(CHAR_MODE_UUID); } catch(e) {}
-        try { charTime = await ledService.getCharacteristic(CHAR_TIME_UUID); } catch(e) {}
-        try { charR = await ledService.getCharacteristic(CHAR_R_ARRAY_UUID); } catch(e) {}
-        try { charG = await ledService.getCharacteristic(CHAR_G_ARRAY_UUID); } catch(e) {}
-        try { charB = await ledService.getCharacteristic(CHAR_B_ARRAY_UUID); } catch(e) {}
-        try { charName = await ledService.getCharacteristic(CHAR_NAME_UUID); } catch(e) {}
-
-        // Check if AES Check handshake service is present
-        try {
-          const aesService = await gattServer.getPrimaryService(SERVICE_AES_UUID);
-          const aesChar = await aesService.getCharacteristic(CHAR_AES_CHECK_UUID);
-          log('Handshake service 0xFC60 found. Sending challenge packet...');
-          const randomVal = Math.floor(Math.random() * 100);
-          const rawChallenge = [0x99, (randomVal >> 8) & 0xff, randomVal & 0xff, 0x12, 0x23, 0x34, 0x45, 0x56, 0x67];
-          const crc = 0x11;
-          const encoded = [crc, ...rawChallenge.map(b => b ^ crc)];
-          await aesChar.writeValueWithResponse(new Uint8Array(encoded).buffer);
-          log('AES challenge accepted!', 'success');
-        } catch(e) {
-          log('Direct GATT mode (no 0xFC60 handshake required).');
-        }
-
-        // Sync Clock if available
-        if (charTime) {
-          const now = new Date();
-          const timeBytes = [
-            now.getFullYear() & 0xFF,
-            (now.getFullYear() >> 8) & 0xFF,
-            now.getMonth() + 1,
-            now.getDate(),
-            now.getHours(),
-            now.getMinutes(),
-            now.getSeconds()
-          ];
-          queueWrite(() => sendGattWrite(charTime, timeBytes));
-        }
-
-        // Read initial state
-        try {
-          const stateData = await charData.readValue();
-          const raw = new Uint8Array(stateData.buffer);
-          const hex = Array.from(raw).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
-          log(`Current State: ${hex}`);
-          if (hex === 'D0000000') {
-            updatePowerUI(false);
-          } else if (raw.length >= 4 && raw[0] === 0xD0) {
-            currentR = raw[1];
-            currentG = raw[2];
-            currentB = raw[3];
-            updatePowerUI(true);
-            updateColorUI(currentR, currentG, currentB);
-          } else {
-            updatePowerUI(true);
-          }
-        } catch (e) {
-          log('Could not read state, assuming ON.');
-          updatePowerUI(true);
-        }
-
-        // UI Updates
-        statusBadge.classList.add('connected');
-        statusText.textContent = 'Connected';
-        deviceNameEl.textContent = bluetoothDevice.name || 'Mansaa Smart Shine';
-        connectBtn.style.display = 'none';
-        disconnectBtn.style.display = 'inline-flex';
-        setControlsEnabled(true);
-
-      } catch (err) {
-        log(`Connection failed: ${err.message}`, 'error');
-        onDisconnected();
-      }
-    });
-
-    disconnectBtn.addEventListener('click', () => {
-      if (bluetoothDevice && bluetoothDevice.gatt.connected) {
-        bluetoothDevice.gatt.disconnect();
-      }
-    });
-
-    function onDisconnected() {
-      log('Device disconnected', 'warn');
-      statusBadge.classList.remove('connected');
-      statusText.textContent = 'Disconnected';
-      deviceNameEl.textContent = 'No device connected';
-      connectBtn.style.display = 'inline-flex';
-      disconnectBtn.style.display = 'none';
-      setControlsEnabled(false);
-      updatePowerUI(false);
-    }
-
-    function updatePowerUI(on) {
-      isPoweredOn = on;
-      if (on) {
-        powerBtn.classList.add('on');
-      } else {
-        powerBtn.classList.remove('on');
-      }
-    }
-
-    function updateColorUI(r, g, b) {
-      const hex = '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
-      colorPicker.value = hex;
-      colorPreview.style.backgroundColor = hex;
-      colorPreview.textContent = hex.toUpperCase();
-      hexVal.textContent = hex.toUpperCase();
-      
-      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-      colorPreview.style.color = luminance > 0.5 ? '#000000' : '#ffffff';
-    }
-
-    // Backend API Bridge (for when running controller.py --serve)
-    const isHostedLocally = window.location.protocol.startsWith('http');
-
-    async function apiPost(endpoint, data) {
-      if (!isHostedLocally) return;
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        return await res.json();
-      } catch (err) {
-        log(`API Error (${endpoint}): ${err.message}`, 'error');
-      }
-    }
-
-    // Auto-detect local backend on load
-    if (isHostedLocally) {
-      log('Loaded via local web server. Checking backend connection...', 'info');
-      fetch('/api/state')
-        .then(r => r.json())
-        .then(data => {
-          if (data.connected) {
-            statusBadge.classList.add('connected');
-            statusText.textContent = 'Connected (Local Daemon)';
-            deviceNameEl.textContent = 'Mansaa Smart Shine';
-            connectBtn.style.display = 'none';
-            disconnectBtn.style.display = 'none';
-            setControlsEnabled(true);
-            updatePowerUI(data.is_on);
-            if (data.r !== undefined) {
-              currentR = data.r; currentG = data.g; currentB = data.b;
-              updateColorUI(currentR, currentG, currentB);
-            }
-            log('Connected to bulb via Python backend daemon!', 'success');
-          } else {
-            log('Python server running. Click Connect or run CLI.', 'info');
-          }
-        })
-        .catch(() => {});
-    }
-
-    // Power Toggle
-    powerBtn.addEventListener('click', () => {
-      if (!isPoweredOn) {
-        // Turn ON: restore color or white
-        if (currentR === 0 && currentG === 0 && currentB === 0) {
-          currentR = 255; currentG = 255; currentB = 255;
-        }
-        applyColor(currentR, currentG, currentB);
-        updatePowerUI(true);
-      } else {
-        // Turn OFF
-        if (charData) {
-          queueWrite(() => sendGattWrite(charData, [0xD0, 0x00, 0x00, 0x00]));
-        } else if (isHostedLocally) {
-          apiPost('/api/power', { power: false });
-        }
-        updatePowerUI(false);
-      }
-    });
-
-    // Apply Color
-    function applyColor(r, g, b) {
-      currentR = r;
-      currentG = g;
-      currentB = b;
-      
-      // Calculate scaled by brightness
-      const scale = currentBrightness / 100.0;
-      const sr = Math.round(r * scale);
-      const sg = Math.round(g * scale);
-      const sb = Math.round(b * scale);
-
-      if (charData) {
-        queueWrite(() => sendGattWrite(charData, [0xD0, sr, sg, sb]));
-      } else if (isHostedLocally) {
-        apiPost('/api/color', { r: sr, g: sg, b: sb, brightness: currentBrightness });
-      }
-      updatePowerUI(true);
-      updateColorUI(r, g, b);
-    }
-
-    // Color Picker Input
-    colorPicker.addEventListener('input', (e) => {
-      const hex = e.target.value;
-      const r = parseInt(hex.slice(1, 3), 16);
-      const g = parseInt(hex.slice(3, 5), 16);
-      const b = parseInt(hex.slice(5, 7), 16);
-      applyColor(r, g, b);
-    });
-
-    // Brightness Slider
-    brightnessSlider.addEventListener('input', (e) => {
-      currentBrightness = parseInt(e.target.value);
-      brightnessVal.textContent = `${currentBrightness}%`;
-      applyColor(currentR, currentG, currentB);
-    });
-
-    // Color Temperature approximation (Kelvin to RGB)
-    function kelvinToRGB(kelvin) {
-      const temp = kelvin / 100;
-      let red, green, blue;
-
-      if (temp <= 66) {
-        red = 255;
-        green = 99.4708025861 * Math.log(temp) - 161.1195681661;
-        if (temp <= 19) {
-          blue = 0;
-        } else {
-          blue = 138.5177312231 * Math.log(temp - 10) - 305.0447927307;
-        }
-      } else {
-        red = 329.698727446 * Math.pow(temp - 60, -0.1332047592);
-        green = 288.1221695283 * Math.pow(temp - 60, -0.0755148492);
-        blue = 255;
-      }
-
-      return [
-        Math.max(0, Math.min(255, Math.round(red))),
-        Math.max(0, Math.min(255, Math.round(green))),
-        Math.max(0, Math.min(255, Math.round(blue)))
-      ];
-    }
-
-    tempSlider.addEventListener('input', (e) => {
-      const k = parseInt(e.target.value);
-      tempVal.textContent = `${k}K`;
-      const [r, g, b] = kelvinToRGB(k);
-      applyColor(r, g, b);
-    });
-
-    // Preset Scenes
-    document.querySelectorAll('.scene-pill').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const [r, g, b] = btn.dataset.rgb.split(',').map(Number);
-        applyColor(r, g, b);
-      });
-    });
-
-    // Dynamic Effects Data
-    const EFFECTS = {
-      stop: {
-        mode: [0x00, 0x00, 0x00, 0x1E]
-      },
-      police: {
-        r: [0xFF, 0x2B, 0xFF, 0x2B, 0xFF, 0x2B, 0xFF, 0x2B],
-        g: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        b: [0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF],
-        mode: [0x01, 0x00, 0x02, 0x04]
-      },
-      slow_music: {
-        r: [0xFF, 0xFF, 0x55, 0x00, 0x08, 0xC8, 0xD4, 0xFF],
-        g: [0x00, 0x80, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0x00],
-        b: [0x00, 0x00, 0x00, 0x5E, 0xFF, 0xFF, 0x00, 0xC8],
-        mode: [0x01, 0x00, 0x05, 0x35]
-      },
-      aliens: {
-        r: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        g: [0xFF, 0xCC, 0xA6, 0x80, 0x66, 0x4D, 0x33, 0x1A],
-        b: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        mode: [0x01, 0x00, 0x02, 0x05]
-      },
-      fantasy: {
-        r: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        g: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        b: [0x1A, 0x33, 0x4D, 0x66, 0x80, 0xA6, 0xCC, 0xFF],
-        mode: [0x01, 0x00, 0x05, 0x09]
-      },
-      magic: {
-        r: [0x00, 0x80, 0x00, 0x66, 0x00, 0x33, 0x00, 0x1A],
-        g: [0x00, 0x80, 0x00, 0x66, 0x00, 0x33, 0x00, 0x1A],
-        b: [0x33, 0x80, 0x66, 0x66, 0x99, 0x33, 0xCC, 0x1A],
-        mode: [0x01, 0x00, 0x02, 0x10]
-      },
-      fire_cracker: {
-        r: [0x80, 0xFF, 0xCC, 0xFF, 0x80, 0xFF, 0xCC, 0xFF],
-        g: [0x80, 0xCE, 0x00, 0x81, 0x80, 0xCE, 0x00, 0x81],
-        b: [0x80, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00],
-        mode: [0x01, 0x00, 0x03, 0x02]
-      },
-      romance: {
-        r: [0xFF, 0xFF, 0x99, 0xFF, 0xFF, 0xFF, 0xFF, 0x99],
-        g: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        b: [0x00, 0xB4, 0x00, 0x00, 0xB4, 0x00, 0xB4, 0x00],
-        mode: [0x01, 0x00, 0x05, 0x99]
-      },
-      dance: {
-        r: [0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF],
-        g: [0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00],
-        b: [0x00, 0xFF, 0x00, 0xE7, 0x00, 0xFF, 0x00, 0xE7],
-        mode: [0x01, 0x00, 0x03, 0x03]
-      }
-    };
-
-    const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-    document.querySelectorAll('.effect-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const effectName = btn.dataset.effect;
-        const effect = EFFECTS[effectName];
-        if (!effect) return;
-
-        document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        queueWrite(async () => {
-          log(`Setting effect: ${effectName}...`);
-          if (!charMode && isHostedLocally) {
-            await apiPost('/api/effect', { name: effectName });
-            updatePowerUI(true);
-            log(`Effect ${effectName} sent via Python backend!`, 'success');
-            return;
-          }
-
-          if (effectName === 'stop') {
-            await sendGattWrite(charMode, effect.mode);
-            log('Dynamic effect stopped.', 'success');
-            return;
-          }
-
-          // Stop active effect first
-          await sendGattWrite(charMode, [0x00, 0x00, 0x00, 0x1E]);
-          await sleep(500);
-
-          // Write RGB tables
-          if (charR && effect.r) {
-            await sendGattWrite(charR, effect.r);
-            await sleep(100);
-          }
-          if (charG && effect.g) {
-            await sendGattWrite(charG, effect.g);
-            await sleep(100);
-          }
-          if (charB && effect.b) {
-            await sendGattWrite(charB, effect.b);
-            await sleep(100);
-          }
-
-          // Trigger Mode
-          await sendGattWrite(charMode, effect.mode);
-          updatePowerUI(true);
-          log(`Effect ${effectName} active!`, 'success');
-        });
-      });
-    });
-  </script>
+  <script src="./app.js"></script>
 </body>
 </html>

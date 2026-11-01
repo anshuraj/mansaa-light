@@ -1,0 +1,19 @@
+{
+  "name": "Mansaa Smart Shine BLE Controller",
+  "short_name": "Smart Shine",
+  "description": "Serverless Web Bluetooth controller for Mansaa Smart Shine BLE smart bulbs.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
